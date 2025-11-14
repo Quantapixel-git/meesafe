@@ -25,222 +25,254 @@ class _LoginScreenState extends State<LoginScreen> {
     selectedRole = widget.role ?? "User";
   }
 
-  @override
-  Widget build(BuildContext context) {
-    String roleMessage = _getRoleMessage(selectedRole);
+@override
+Widget build(BuildContext context) {
+  String roleMessage = _getRoleMessage(selectedRole);
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+  return Scaffold(
+    backgroundColor: Colors.grey[100],
+    body: LayoutBuilder(
+      builder: (context, constraints) {
+        // 💻 For web/desktop layout
+        if (constraints.maxWidth > 800) {
+          return Center(
+            child: Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              margin: const EdgeInsets.all(32),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 450),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: _buildLoginContent(roleMessage),
+                ),
+              ),
+            ),
+          );
+        }
+
+        // 📱 For mobile/tablet (default existing layout)
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: _buildLoginContent(roleMessage),
+          ),
+        );
+      },
+    ),
+  );
+}
+
+/// 🧩 Extracted method — your existing login UI unchanged
+Widget _buildLoginContent(String roleMessage) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Spacer(),
+
+      // App Logo + Long Press Gesture
+      Center(
+        child: GestureDetector(
+          onLongPress: () {
+            setState(() {
+              _showAdminButton = !_showAdminButton;
+            });
+          },
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Spacer(),
-
-              // App Logo + Long Press Gesture
-              Center(
-                child: GestureDetector(
-                  onLongPress: () {
-                    setState(() {
-                      _showAdminButton = !_showAdminButton;
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.security_rounded,
-                        color: AppColors.primary,
-                        size: 80,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "MeeSafe",
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-              Text(
-                "Login as $selectedRole",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                roleMessage,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
-              ),
-              const SizedBox(height: 20),
-
-              // Phone Input
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  hintText: "Enter your mobile number",
-                  prefixIcon: const Icon(Icons.phone_android),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // Send OTP Button
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            OtpScreen(phoneNumber: _phoneController.text),
-                      ),
-                       (route) => false,
-                    );
-                  },
-                  child: const Text(
-                    "Send OTP",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Other Roles Section
-              Text(
-                "Other Login Options",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
+              Icon(
+                Icons.security_rounded,
+                color: AppColors.primary,
+                size: 80,
               ),
               const SizedBox(height: 10),
-
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: Icon(Icons.store_rounded, color: AppColors.primary),
-                      label: const Text("Vendor"),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.primary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const VendorLoginScreen(),
-                          ),
-                           (route) => false,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      icon: Icon(
-                        Icons.business_center_rounded,
-                        color: AppColors.primary,
-                      ),
-                      label: const Text("Branches"),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: AppColors.primary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const BranchLogin(),
-                          ),
-                           (route) => false,
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              // Hidden Admin Button (shows on long press)
-              if (_showAdminButton) ...[
-                const SizedBox(height: 10),
-                Center(
-                  child: ElevatedButton.icon(
-                    icon: Icon(
-                      Icons.admin_panel_settings_rounded,
-                      color: AppColors.primary,
-                    ),
-                    label: Text(
-                      "Admin Login",
-                      style: TextStyle(color: AppColors.primary),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: AppColors.primary),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        selectedRole = "Admin";
-                      });
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AdminLoginScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                  ),
-                ),
-              ],
-
-              const Spacer(),
-
-              Center(
-                child: Text(
-                  "You'll receive an SMS with a verification code",
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 13,
-                    fontStyle: FontStyle.italic,
-                  ),
+              Text(
+                "MeeSafe",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
-    );
-  }
+
+      const SizedBox(height: 20),
+      Text(
+        "Login as $selectedRole",
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      const SizedBox(height: 6),
+      Text(
+        roleMessage,
+        style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+      ),
+      const SizedBox(height: 20),
+
+      // Phone Input
+      TextField(
+        controller: _phoneController,
+        keyboardType: TextInputType.phone,
+        decoration: InputDecoration(
+          hintText: "Enter your mobile number",
+          prefixIcon: const Icon(Icons.phone_android),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      const SizedBox(height: 30),
+
+      // Send OTP Button
+      SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    OtpScreen(phoneNumber: _phoneController.text),
+              ),
+              (route) => false,
+            );
+          },
+          child: const Text(
+            "Send OTP",
+            style: TextStyle(fontSize: 16, color: Colors.white),
+          ),
+        ),
+      ),
+
+      const SizedBox(height: 30),
+
+      // Other Roles Section
+      Text(
+        "Other Login Options",
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.grey.shade600,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      const SizedBox(height: 10),
+
+      Row(
+        children: [
+          Expanded(
+            child: OutlinedButton.icon(
+              icon: Icon(Icons.store_rounded, color: AppColors.primary),
+              label: const Text("Vendor"),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: AppColors.primary),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const VendorLoginScreen(),
+                  ),
+                  (route) => false,
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: OutlinedButton.icon(
+              icon: Icon(
+                Icons.business_center_rounded,
+                color: AppColors.primary,
+              ),
+              label: const Text("Branches"),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: AppColors.primary),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BranchLogin(),
+                  ),
+                  (route) => false,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+
+      if (_showAdminButton) ...[
+        const SizedBox(height: 10),
+        Center(
+          child: ElevatedButton.icon(
+            icon: Icon(
+              Icons.admin_panel_settings_rounded,
+              color: AppColors.primary,
+            ),
+            label: Text(
+              "Admin Login",
+              style: TextStyle(color: AppColors.primary),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: AppColors.primary),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                selectedRole = "Admin";
+              });
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AdminLoginScreen(),
+                ),
+                (route) => false,
+              );
+            },
+          ),
+        ),
+      ],
+
+      const Spacer(),
+
+      Center(
+        child: Text(
+          "You'll receive an SMS with a verification code",
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 13,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ),
+      const SizedBox(height: 20),
+    ],
+  );
+}
+
 
   String _getRoleMessage(String role) {
     switch (role.toLowerCase()) {

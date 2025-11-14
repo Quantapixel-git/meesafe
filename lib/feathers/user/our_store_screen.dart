@@ -8,7 +8,7 @@ class StoreLocatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, String>> stores = [
       {
-        'image': 'assets/images/ad_1.png',
+        'image': 'assets/images/ad_1.jpeg',
         'title': 'Tambaram, Chennai',
         'address':
             'Shop No: 8.A, 45, Shanmugam Rd, West Tambaram,\nChennai, Tamil Nadu - 600045',

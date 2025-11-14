@@ -17,7 +17,7 @@ class _UserWarrantyClaimScreenState extends State<UserWarrantyClaimScreen> {
   File? issueImage;
   final ImagePicker _picker = ImagePicker();
 
-  // In a real app, these IMEIs would come from the user’s registered warranties.
+  // In a real app, these IMEIs would come from API
   final List<String> registeredImeis = [
     "123456789012345",
     "987654321098765",
@@ -96,114 +96,143 @@ class _UserWarrantyClaimScreenState extends State<UserWarrantyClaimScreen> {
         foregroundColor: Colors.white,
       ),
       backgroundColor: Colors.grey[100],
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
+
+      // 📌 Responsive layout starts here
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final bool isMobile = constraints.maxWidth < 600;
+          final bool isTablet = constraints.maxWidth >= 600 && constraints.maxWidth < 1024;
+          final bool isDesktop = constraints.maxWidth >= 1024;
+
+          double contentWidth = constraints.maxWidth;
+
+          if (isTablet) contentWidth = 600;     // medium width
+          if (isDesktop) contentWidth = 700;    // wide desktop layout
+
+          return Center(
+            child: Container(
+              width: contentWidth,
+              padding: EdgeInsets.all(isMobile ? 16 : 24),
+              child: ListView(
                 children: [
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: "Select Registered IMEI",
-                      border: OutlineInputBorder(),
-                    ),
-                    items: registeredImeis
-                        .map((imei) => DropdownMenuItem(
-                            value: imei, child: Text(imei)))
-                        .toList(),
-                    onChanged: (val) => setState(() => selectedImei = val),
-                    validator: (val) =>
-                        val == null ? "Please select an IMEI" : null,
-                  ),
-                  const SizedBox(height: 16),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(
+                            labelText: "Select Registered IMEI",
+                            border: OutlineInputBorder(),
+                          ),
+                          items: registeredImeis
+                              .map((imei) => DropdownMenuItem(
+                                  value: imei, child: Text(imei)))
+                              .toList(),
+                          onChanged: (val) => setState(() => selectedImei = val),
+                          validator: (val) =>
+                              val == null ? "Please select an IMEI" : null,
+                        ),
 
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: "Describe the Issue",
-                      border: OutlineInputBorder(),
-                    ),
-                    maxLines: 3,
-                    validator: (val) => val == null || val.isEmpty
-                        ? "Please describe your issue"
-                        : null,
-                    onSaved: (val) => issueDescription = val,
-                  ),
-                  const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                  Text(
-                    "Capture Issue Image",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.grey[700]),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                            labelText: "Describe the Issue",
+                            border: OutlineInputBorder(),
+                          ),
+                          maxLines: 3,
+                          validator: (val) => val == null || val.isEmpty
+                              ? "Please describe your issue"
+                              : null,
+                          onSaved: (val) => issueDescription = val,
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        Text(
+                          "Capture Issue Image",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700]),
+                        ),
+                        const SizedBox(height: 8),
+
+                        InkWell(
+                          onTap: _captureIssueImage,
+                          child: Container(
+                            height: isMobile ? 180 : 220,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white,
+                            ),
+                            child: issueImage == null
+                                ? const Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.camera_alt,
+                                            size: 50, color: Colors.grey),
+                                        SizedBox(height: 8),
+                                        Text("Tap to capture issue photo",
+                                            style:
+                                                TextStyle(color: Colors.grey)),
+                                      ],
+                                    ),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(issueImage!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: double.infinity),
+                                  ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _submitClaim,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                            ),
+                            child: const Text(
+                              "Submit Claim",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+
+                  const SizedBox(height: 30),
+
+                  if (submittedClaims.isNotEmpty)
+                    const Text(
+                      "My Submitted Claims",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
+                    ),
+
                   const SizedBox(height: 8),
 
-                  InkWell(
-                    onTap: _captureIssueImage,
-                    child: Container(
-                      height: 180,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                      ),
-                      child: issueImage == null
-                          ? const Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.camera_alt,
-                                      size: 50, color: Colors.grey),
-                                  SizedBox(height: 8),
-                                  Text("Tap to capture issue photo",
-                                      style: TextStyle(color: Colors.grey)),
-                                ],
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.file(issueImage!,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 180),
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _submitClaim,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      child: const Text(
-                        "Submit Claim",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  ...submittedClaims.map(_buildClaimCard),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
-            if (submittedClaims.isNotEmpty)
-              const Text(
-                "My Submitted Claims",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87),
-              ),
-            const SizedBox(height: 8),
-            ...submittedClaims.map(_buildClaimCard),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

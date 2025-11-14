@@ -75,76 +75,84 @@ class TestimonialScreen extends StatelessWidget {
   }
 
   Widget _buildTestimonialCard({
-    required String name,
-    required String feedback,
-    required String imagePath,
-    required int rating,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 6),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Avatar and name
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundImage: AssetImage(imagePath),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                    fontSize: 16,
-                    overflow: TextOverflow.ellipsis,
+  required String name,
+  required String feedback,
+  required String imagePath,
+  required int rating,
+}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 6),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // ✅ Prevent height overflow
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Avatar and name
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 22,
+                  backgroundImage: AssetImage(imagePath),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                      fontSize: 16,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          // ⭐ Rating stars
-          Row(
-            children: List.generate(5, (index) {
-              return Icon(
-                index < rating ? Icons.star : Icons.star_border,
-                color: Colors.amber,
-                size: 18,
-              );
-            }),
-          ),
-          const SizedBox(height: 10),
-
-          // Feedback
-          Text(
-            feedback,
-            style: const TextStyle(
-              color: Colors.black87,
-              fontSize: 14,
-              height: 1.4,
+              ],
             ),
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 8),
+
+            // ⭐ Rating stars
+            Row(
+              children: List.generate(5, (index) {
+                return Icon(
+                  index < rating ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                  size: 18,
+                );
+              }),
+            ),
+            const SizedBox(height: 10),
+
+            // Feedback
+            Flexible( // ✅ Allow text to adapt to card size
+              child: Text(
+                feedback,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 14,
+                  height: 1.4,
+                ),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 }

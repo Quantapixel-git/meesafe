@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
-import 'package:mee_safe/feathers/user/best_market_screen.dart';
 import 'package:mee_safe/feathers/user/testimonial_screen.dart';
 import 'package:mee_safe/feathers/user/download_now_screen.dart';
 import 'package:mee_safe/feathers/user/sell_screen.dart';
@@ -21,7 +20,7 @@ class _SellHomeScreenState extends State<SellHomeScreen> {
   int _currentCarousel = 0;
 
   final List<String> _carouselImages = [
-    'assets/images/ad_1.png',
+    'assets/images/ad_1.jpeg',
     'assets/images/ad_2.png',
     'assets/images/ad_3.png',
   ];
@@ -178,7 +177,7 @@ class _SellHomeScreenState extends State<SellHomeScreen> {
             const SizedBox(height: 26),
             TestimonialScreen(),
             SellScreen(),
-            BestMarketScreen(),
+            // BestMarketScreen(),
             const SizedBox(height: 10),
             SuccessInNumbersScreen(),
             DownloadNowScreen(),
@@ -189,56 +188,90 @@ class _SellHomeScreenState extends State<SellHomeScreen> {
   }
 
   Widget _buildCarousel() {
-    return Column(
-      children: [
-        CarouselSlider(
-          items: _carouselImages
-              .map(
-                (imgPath) => ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.asset(
-                    imgPath,
-                    width: double.infinity,
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final bool isWeb = constraints.maxWidth > 800;
+
+      return Column(
+        children: [
+          CarouselSlider(
+            items: _carouselImages.map((imgPath) {
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isWeb ? 10 : 6, // 🔹 space between slides
+                ),
+                child: Center(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: isWeb ? 1000 : double.infinity,
+                      maxHeight: isWeb ? 350 : 200,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(isWeb ? 20 : 16),
+                      boxShadow: [
+                        if (isWeb)
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 6),
+                          ),
+                      ],
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(isWeb ? 20 : 16),
+                      child: Image.asset(
+                        imgPath,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
                   ),
                 ),
-              )
-              .toList(),
-          options: CarouselOptions(
-            height: 200,
-            autoPlay: true,
-            enlargeCenterPage: true,
-            viewportFraction: 0.9,
-            onPageChanged: (index, _) {
-              setState(() {
-                _currentCarousel = index;
-              });
-            },
+              );
+            }).toList(),
+            options: CarouselOptions(
+              height: isWeb ? 380 : 200,
+              autoPlay: true,
+              enlargeCenterPage: true,
+              // 🔹 slightly reduced viewportFraction to leave visible spacing
+              viewportFraction: isWeb ? 0.68 : 0.88,
+              enlargeStrategy: CenterPageEnlargeStrategy.height,
+              onPageChanged: (index, _) {
+                setState(() {
+                  _currentCarousel = index;
+                });
+              },
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _carouselImages.asMap().entries.map((entry) {
-            return GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: 8.0,
-                height: 8.0,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 3.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentCarousel == entry.key
-                      ? AppColors.primary
-                      : Colors.grey.shade400,
+          const SizedBox(height: 10),
+          // 🔹 Indicator dots
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _carouselImages.asMap().entries.map((entry) {
+              return GestureDetector(
+                onTap: () {},
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: _currentCarousel == entry.key ? 18.0 : 8.0,
+                  height: 8.0,
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: _currentCarousel == entry.key
+                        ? AppColors.primary
+                        : Colors.grey.shade400,
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
+              );
+            }).toList(),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   // 🔹 Horizontal Device Card
   Widget _horizontalDeviceCard({
