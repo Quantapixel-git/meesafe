@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
+import 'package:mee_safe/feathers/user/user_plan_screen.dart';
 import 'package:mee_safe/feathers/web/web_evaluation_screen.dart';
 
 class WebUserWarrantyRegistrationWeb extends StatefulWidget {
@@ -151,7 +152,7 @@ class _WebUserWarrantyRegistrationWebState
               Navigator.pop(context);
               _finalizeRegistration();
             },
-            child: const Text("Accept & Register"),
+            child: const Text("Accept & Register",style: TextStyle(color :Colors.white),),
           ),
         ],
       ),
@@ -174,10 +175,7 @@ class _WebUserWarrantyRegistrationWebState
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => const  WebEvaluationScreen(
-          deviceName: "Samsung Galaxy Z Flip 7 (12 GB/256 GB)",
-          imageUrl:
-              'assets/images/samsung.jpg',
+          builder: (context) => const  WebPlanScreen(
         ),),
     );
 
@@ -232,50 +230,37 @@ class _WebUserWarrantyRegistrationWebState
                           ),
                           const SizedBox(height: 24),
 
-                          DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                                labelText: "Select Device",
-                                border: OutlineInputBorder()),
-                            items: devices
-                                .map((d) =>
-                                    DropdownMenuItem(value: d, child: Text(d)))
-                                .toList(),
-                            onChanged: (val) =>
-                                setState(() => selectedDevice = val),
-                            validator: (val) => val == null
-                                ? "Please select a device type"
-                                : null,
-                          ),
-                          const SizedBox(height: 16),
+                          // ✅ Read-only 3 default fields
+TextFormField(
+  decoration: const InputDecoration(
+    labelText: "Device",
+    border: OutlineInputBorder(),
+  ),
+  initialValue: selectedDevice ?? "Mobile",
+  enabled: false,
+),
+const SizedBox(height: 16),
+TextFormField(
+  decoration: const InputDecoration(
+    labelText: "Brand / Model",
+    border: OutlineInputBorder(),
+  ),
+  initialValue: selectedBrand != null && selectedModel != null
+      ? "${selectedBrand!} ${selectedModel!}"
+      : "Samsung S24",
+  enabled: false,
+),
+const SizedBox(height: 16),
+TextFormField(
+  decoration: const InputDecoration(
+    labelText: "Variant",
+    border: OutlineInputBorder(),
+  ),
+  initialValue: purchasedFor ?? "4 GB / 128 GB",
+  enabled: false,
+),
+const SizedBox(height: 24),
 
-                          DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                                labelText: "Select Brand",
-                                border: OutlineInputBorder()),
-                            items: brands
-                                .map((b) =>
-                                    DropdownMenuItem(value: b, child: Text(b)))
-                                .toList(),
-                            onChanged: (val) =>
-                                setState(() => selectedBrand = val),
-                            validator: (val) =>
-                                val == null ? "Please select a brand" : null,
-                          ),
-                          const SizedBox(height: 16),
-
-                          DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                                labelText: "Select Model",
-                                border: OutlineInputBorder()),
-                            items: models
-                                .map((m) =>
-                                    DropdownMenuItem(value: m, child: Text(m)))
-                                .toList(),
-                            onChanged: (val) =>
-                                setState(() => selectedModel = val),
-                            validator: (val) =>
-                                val == null ? "Please select a model" : null,
-                          ),
                           const SizedBox(height: 24),
 
                           const Text("Upload Device Image",

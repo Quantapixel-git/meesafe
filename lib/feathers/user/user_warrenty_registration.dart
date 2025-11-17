@@ -2,15 +2,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
+import 'package:mee_safe/feathers/user/user_plan_screen.dart';
 import 'package:mee_safe/feathers/user/variant_price_questionary_screen.dart';
-
 class UserWarrantyRegistrationScreen extends StatefulWidget {
-  const UserWarrantyRegistrationScreen({super.key});
+  final String? selectedDevice;
+  final String? selectedBrand;
+  final String? selectedModel;
+
+  const UserWarrantyRegistrationScreen({
+    super.key,
+    this.selectedDevice,
+    this.selectedBrand,
+    this.selectedModel,
+  });
 
   @override
   State<UserWarrantyRegistrationScreen> createState() =>
       _UserWarrantyRegistrationScreenState();
 }
+
 
 class _UserWarrantyRegistrationScreenState
     extends State<UserWarrantyRegistrationScreen> {
@@ -173,7 +183,7 @@ if (purchasedFor == "Other Person" && ownershipDocument == null) {
             },
             style:
                 ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-            child: const Text("Accept & Register"),
+            child: const Text("Accept & Register",style: TextStyle(color: Colors.white),),
           ),
         ],
       ),
@@ -196,7 +206,7 @@ if (purchasedFor == "Other Person" && ownershipDocument == null) {
     );
      Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const VariantPriceQuestionaryScreen()),
+          MaterialPageRoute(builder: (context) => const UserPlanScreen()),
         );
 
     setState(() {
@@ -222,40 +232,54 @@ if (purchasedFor == "Other Person" && ownershipDocument == null) {
           key: _formKey,
           child: ListView(
             children: [
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                    labelText: "Select Device", border: OutlineInputBorder()),
-                items: devices
-                    .map((d) => DropdownMenuItem(value: d, child: Text(d)))
-                    .toList(),
-                onChanged: (val) => setState(() => selectedDevice = val),
-                validator: (val) =>
-                    val == null ? "Please select a device type" : null,
-              ),
-              const SizedBox(height: 16),
+         // --- DEVICE (READ ONLY) ---
+TextFormField(
+  initialValue: selectedDevice ?? "",
+  enabled: false,
+  decoration: InputDecoration(
+    labelText: "Selected Device",
+    border: OutlineInputBorder(),
+    disabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey),
+    ),
+    fillColor: Colors.grey[200],
+    filled: true,
+  ),
+),
+const SizedBox(height: 16),
 
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                    labelText: "Select Brand", border: OutlineInputBorder()),
-                items: brands
-                    .map((b) => DropdownMenuItem(value: b, child: Text(b)))
-                    .toList(),
-                onChanged: (val) => setState(() => selectedBrand = val),
-                validator: (val) =>
-                    val == null ? "Please select a brand" : null,
-              ),
-              const SizedBox(height: 16),
+// --- BRAND (READ ONLY) ---
+TextFormField(
+  initialValue: selectedBrand ?? "",
+  enabled: false,
+  decoration: InputDecoration(
+    labelText: "Selected Brand",
+    border: OutlineInputBorder(),
+    disabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey),
+    ),
+    fillColor: Colors.grey[200],
+    filled: true,
+  ),
+),
+const SizedBox(height: 16),
 
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                    labelText: "Select Model", border: OutlineInputBorder()),
-                items: models
-                    .map((m) => DropdownMenuItem(value: m, child: Text(m)))
-                    .toList(),
-                onChanged: (val) => setState(() => selectedModel = val),
-                validator: (val) =>
-                    val == null ? "Please select a model" : null,
-              ),
+// --- MODEL (READ ONLY) ---
+TextFormField(
+  initialValue: selectedModel ?? "",
+  enabled: false,
+  decoration: InputDecoration(
+    labelText: "Selected Model",
+    border: OutlineInputBorder(),
+    disabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey),
+    ),
+    fillColor: Colors.grey[200],
+    filled: true,
+  ),
+),
+const SizedBox(height: 16),
+
               const SizedBox(height: 16),
 
               Text("Capture Device Image",

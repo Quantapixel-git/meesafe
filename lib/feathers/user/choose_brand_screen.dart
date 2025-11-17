@@ -39,7 +39,7 @@ class ChooseBrandScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Search Your Brand To Sell",
+              "Search Your Brand",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

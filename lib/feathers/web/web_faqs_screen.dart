@@ -40,7 +40,7 @@ class WebFaqsScreen extends StatelessWidget {
       {
         "q": "What if I lost my invoice but device is still under warranty?",
         "a":
-            "You can still sell your device. The team will verify warranty status during pickup."
+            "You can still registered device. The team will verify warranty status during pickup."
       },
       {
         "q": "What do you do with my old phone?",

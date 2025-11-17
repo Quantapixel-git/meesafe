@@ -125,8 +125,6 @@ class ProfileForm extends StatelessWidget {
               "Profile",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: 8),
-            Icon(Icons.delete_outline, size: 21),
           ],
         ),
 
@@ -225,7 +223,7 @@ class FooterSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text("DOFY",
+                  Text("MEESAFE",
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -280,15 +278,15 @@ class FooterSection extends StatelessWidget {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   SizedBox(height: 12),
-                  Text("Sell Phone"),
-                  Text("Sell Laptop"),
-                  Text("Sell Tablet"),
-                  Text("Sell SmartWatch"),
-                  Text("Sell Gaming Console"),
-                  Text("Sell Earbuds"),
-                  Text("Sell Camera"),
-                  Text("Sell Desktop"),
-                  Text("Sell TV"),
+                  Text("Phone"),
+                  Text("Laptop"),
+                  Text("Tablet"),
+                  Text("SmartWatch"),
+                  Text("Gaming Console"),
+                  Text("Earbuds"),
+                  Text("Camera"),
+                  Text("Desktop"),
+                  Text("TV"),
                 ],
               ),
             ),

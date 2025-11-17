@@ -44,16 +44,7 @@ class VariantPriceScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Sell & Get value upto",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 22),
-
+          
             // Phone Card
             Container(
               width: double.infinity,

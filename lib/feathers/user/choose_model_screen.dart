@@ -55,7 +55,7 @@ class ChooseModelScreen extends StatelessWidget {
           children: [
             // Header
             const Text(
-              "Search Samsung Model To Sell",
+              "Search Samsung Model",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,

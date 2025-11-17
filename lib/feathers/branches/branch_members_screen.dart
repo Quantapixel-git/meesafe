@@ -113,30 +113,6 @@ class _BranchMembersScreenState extends State<BranchMembersScreen> {
                             const TextStyle(fontSize: 13, color: Colors.black54),
                       ),
                       isThreeLine: true,
-                      trailing: widget.isManager
-                          ? PopupMenuButton<String>(
-                              onSelected: (value) {
-                                if (value == "remove") {
-                                  setState(() {
-                                    branchMembers.removeAt(index);
-                                  });
-                                } else if (value == "changeRole") {
-                                  _showRoleAssignDialog(context, index);
-                                }
-                              },
-                              itemBuilder: (context) => [
-                                const PopupMenuItem(
-                                  value: "changeRole",
-                                  child: Text("Change Role"),
-                                ),
-                                const PopupMenuItem(
-                                  value: "remove",
-                                  child: Text("Remove Member"),
-                                ),
-                              ],
-                              icon: const Icon(Icons.more_vert),
-                            )
-                          : null,
                     ),
                   );
                 },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
 import 'package:mee_safe/feathers/user/user_plan_screen.dart';
+import 'package:mee_safe/feathers/web/web_user_warranty_registration.dart';
 
 class WebWarrantyConditionScreen extends StatefulWidget {
   final String deviceName;
@@ -234,12 +235,12 @@ class _WebWarrantyConditionScreenState
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          WebPlanScreen()
+                                          WebUserWarrantyRegistrationWeb()
                                     ),
                                   );
                                     },
                               child: const Text(
-                                "Finish",
+                                "Next",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,

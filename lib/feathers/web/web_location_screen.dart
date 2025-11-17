@@ -97,7 +97,10 @@ class _WebLocationPopupState extends State<WebLocationPopup> {
      Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => WebUserWarrantyRegistrationWeb(
+        builder: (context) => WebEvaluationScreen(
+          deviceName: "Samsung Galaxy Z Flip 7 (12 GB/256 GB)",
+          imageUrl:
+              'assets/images/samsung.jpg',
         ),
       ),
     );

@@ -24,23 +24,7 @@ class _VendorLoginScreenState extends State<VendorLoginScreen> {
   @override
   Widget build(BuildContext context) {
     String roleMessage = "";
-    switch (selectedRole.toLowerCase()) {
-      case "admin":
-        roleMessage = "Admin access — manage system and users securely.";
-        break;
-      case "staff":
-        roleMessage = "Staff access — manage daily operations efficiently.";
-        break;
-      case "user":
-        roleMessage = "User access — track and secure your data easily.";
-        break;
-      case "guest":
-        roleMessage = "Guest access — explore features with limited access.";
-        break;
-      default:
-        roleMessage = "Login securely using your registered number.";
-    }
-
+   
     return Scaffold(
       backgroundColor: Colors.white,
        appBar: AppBar(
@@ -109,18 +93,7 @@ class _VendorLoginScreenState extends State<VendorLoginScreen> {
               ),
               const SizedBox(height: 20),
 
-              // 🟣 Role buttons (User button added)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildRoleButton("User"),
-                  _buildRoleButton("Staff"),
-                  _buildRoleButton("Admin"),
-                ],
-              ),
-
-              const SizedBox(height: 30),
-
+             
               // Send OTP Button
               SizedBox(
                 width: double.infinity,

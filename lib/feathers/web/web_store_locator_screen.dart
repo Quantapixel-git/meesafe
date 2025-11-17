@@ -18,7 +18,7 @@ class WebStoreLocatorScreen extends StatelessWidget {
         "image": "assets/images/ad_2.png",
         "title": "Nungambakkam, Chennai",
         "address":
-            "No 112&B2, Dofy Electronics & Solutions Pvt Ltd, Eldorado Building, Nungambakkam High Rd, Thousand Lights West, Chennai, Tamil Nadu - 600034",
+            "No 112&B2, MEESAFE Electronics & Solutions Pvt Ltd, Eldorado Building, Nungambakkam High Rd, Thousand Lights West, Chennai, Tamil Nadu - 600034",
         "time": "Sunday-Saturday 10 am - 9 pm"
       },
       {

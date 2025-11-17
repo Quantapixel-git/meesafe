@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
 import 'package:mee_safe/feathers/user/bottom_nav.dart';
 import 'package:mee_safe/feathers/user/final_sell_screen.dart';
+import 'package:mee_safe/feathers/user/user_success_plan_screen.dart';
 import 'package:mee_safe/feathers/web/web_home_screen.dart';
 
 class UserPlanScreen extends StatefulWidget {
@@ -52,7 +53,7 @@ class _UserPlanScreenState extends State<UserPlanScreen> {
      Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => BottomNav(),
+          builder: (context) => PaymentSuccessScreen(),
         ),
       );
   }
@@ -253,7 +254,7 @@ class _WebPlanScreenState extends State<WebPlanScreen> {
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text("Plan Purchased Successfully!")));
 
-    Navigator.push(context, MaterialPageRoute(builder: (c) => WebHomeScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (c) => PaymentSuccessWeb()));
   }
 
   @override

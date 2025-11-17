@@ -34,78 +34,103 @@ class _VendorLoginScreenState extends State<VendorLoginScreen> {
     return Scaffold(
       appBar: AppBar(),
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 80),
-               Icon(Icons.storefront_rounded,
-                  color: AppColors.primary, size: 90),
-              const SizedBox(height: 12),
-               Text(
-                "Vendor Login",
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                "Access your vendor dashboard securely",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15, color: Colors.black54),
-              ),
-              const SizedBox(height: 50),
 
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  hintText: "Enter mobile number",
-                  prefixIcon: const Icon(Icons.phone_android),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWide = constraints.maxWidth > 600;
+
+          return Center(
+            child: Container(
+              width: isWide ? 450 : double.infinity, // center card for web
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: isWide ? 100 : 80),
+
+                  Icon(
+                    Icons.storefront_rounded,
+                    color: AppColors.primary,
+                    size: isWide ? 110 : 90,
                   ),
-                ),
-              ),
 
-              const SizedBox(height: 30),
+                  const SizedBox(height: 12),
 
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  Text(
+                    "Vendor Login",
+                    style: TextStyle(
+                      fontSize: isWide ? 32 : 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
                     ),
                   ),
-                  onPressed: _sendOtp,
-                  child: const Text(
-                    "Send OTP",
-                    style: TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600,color: Colors.white),
-                  ),
-                ),
-              ),
 
-              const Spacer(),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Text(
-                  "You'll receive an SMS with a verification code",
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 13,
-                      fontStyle: FontStyle.italic),
-                ),
+                  const SizedBox(height: 8),
+
+                  const Text(
+                    "Access your vendor dashboard securely",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15, color: Colors.black54),
+                  ),
+
+                  const SizedBox(height: 50),
+
+                  // 🔹 Phone Field
+                  TextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: "Enter mobile number",
+                      prefixIcon: const Icon(Icons.phone_android),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // 🔹 Send OTP Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: isWide ? 55 : 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: _sendOtp,
+                      child: Text(
+                        "Send OTP",
+                        style: TextStyle(
+                          fontSize: isWide ? 18 : 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "You'll receive an SMS with a verification code",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 13,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

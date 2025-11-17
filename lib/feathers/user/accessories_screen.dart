@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
 import 'package:mee_safe/feathers/user/evaluation_summary_screen.dart';
+import 'package:mee_safe/feathers/user/user_evaluation_mobile_screen.dart';
 
 class AccessoriesScreen extends StatefulWidget {
   const AccessoriesScreen({super.key});
@@ -33,7 +34,7 @@ class _AccessoriesScreenState extends State<AccessoriesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => EvaluationSummaryScreen(),
+        builder: (_) => UserEvaluationMobileScreen(),
       ),
     );
   }

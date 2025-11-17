@@ -46,21 +46,6 @@ class _SellHomeScreenState extends State<SellHomeScreen> {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
-        actions: [
-           InkWell(
-              onTap: () {},
-              child: Row(
-                children: const [
-                  Icon(Icons.location_on_outlined, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text(
-                    'Select location',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-        ],
         title: const Text("Mee Safe"),
       ),
       body: SingleChildScrollView(
@@ -68,42 +53,30 @@ class _SellHomeScreenState extends State<SellHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-           
-   const SizedBox(height: 12),
- // 🔹 Advertisement Heading Section
-          Column(
-            children: [
-              Text(
-                "Exclusive Offers!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.primary,
-                  letterSpacing: 1,
+            const SizedBox(height: 12),
+            Column(
+              children: [
+                Text(
+                  "Exclusive Offers!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
+                    letterSpacing: 1,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              const Text(
-                "Sell your device at the best price — quick, easy & secure.",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // 🔹 Top Advertisement Carousel
             _buildCarousel(),
             const SizedBox(height: 28),
             const Center(
               child: Text(
-                'Sell Any Device, Anytime — Only on Mee Safe!',
+                'Registered Any Device, Anytime — Only on Mee Safe!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -164,7 +137,7 @@ class _SellHomeScreenState extends State<SellHomeScreen> {
                   ),
                 ),
                 child: const Text(
-                  'Sell all devices',
+                  'All devices',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -188,90 +161,89 @@ class _SellHomeScreenState extends State<SellHomeScreen> {
   }
 
   Widget _buildCarousel() {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      final bool isWeb = constraints.maxWidth > 800;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isWeb = constraints.maxWidth > 800;
 
-      return Column(
-        children: [
-          CarouselSlider(
-            items: _carouselImages.map((imgPath) {
-              return Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isWeb ? 10 : 6, // 🔹 space between slides
-                ),
-                child: Center(
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: isWeb ? 1000 : double.infinity,
-                      maxHeight: isWeb ? 350 : 200,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(isWeb ? 20 : 16),
-                      boxShadow: [
-                        if (isWeb)
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 6),
-                          ),
-                      ],
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(isWeb ? 20 : 16),
-                      child: Image.asset(
-                        imgPath,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
+        return Column(
+          children: [
+            CarouselSlider(
+              items: _carouselImages.map((imgPath) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isWeb ? 10 : 6, // 🔹 space between slides
+                  ),
+                  child: Center(
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: isWeb ? 1000 : double.infinity,
+                        maxHeight: isWeb ? 350 : 200,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(isWeb ? 20 : 16),
+                        boxShadow: [
+                          if (isWeb)
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 6),
+                            ),
+                        ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(isWeb ? 20 : 16),
+                        child: Image.asset(
+                          imgPath,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
-            options: CarouselOptions(
-              height: isWeb ? 380 : 200,
-              autoPlay: true,
-              enlargeCenterPage: true,
-              // 🔹 slightly reduced viewportFraction to leave visible spacing
-              viewportFraction: isWeb ? 0.68 : 0.88,
-              enlargeStrategy: CenterPageEnlargeStrategy.height,
-              onPageChanged: (index, _) {
-                setState(() {
-                  _currentCarousel = index;
-                });
-              },
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: isWeb ? 380 : 200,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                // 🔹 slightly reduced viewportFraction to leave visible spacing
+                viewportFraction: isWeb ? 0.68 : 0.88,
+                enlargeStrategy: CenterPageEnlargeStrategy.height,
+                onPageChanged: (index, _) {
+                  setState(() {
+                    _currentCarousel = index;
+                  });
+                },
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          // 🔹 Indicator dots
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _carouselImages.asMap().entries.map((entry) {
-              return GestureDetector(
-                onTap: () {},
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: _currentCarousel == entry.key ? 18.0 : 8.0,
-                  height: 8.0,
-                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: _currentCarousel == entry.key
-                        ? AppColors.primary
-                        : Colors.grey.shade400,
+            const SizedBox(height: 10),
+            // 🔹 Indicator dots
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _carouselImages.asMap().entries.map((entry) {
+                return GestureDetector(
+                  onTap: () {},
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: _currentCarousel == entry.key ? 18.0 : 8.0,
+                    height: 8.0,
+                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: _currentCarousel == entry.key
+                          ? AppColors.primary
+                          : Colors.grey.shade400,
+                    ),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+                );
+              }).toList(),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   // 🔹 Horizontal Device Card
   Widget _horizontalDeviceCard({

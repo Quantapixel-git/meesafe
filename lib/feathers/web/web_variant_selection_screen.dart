@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
 import 'package:mee_safe/feathers/web/web_home_screen.dart';
-import 'package:mee_safe/feathers/web/web_varient_price_screen.dart';
+import 'package:mee_safe/feathers/web/web_location_screen.dart';
 
 class WebVariantSelectionScreen extends StatefulWidget {
   final String modelName;
@@ -169,7 +169,7 @@ class _WebVariantSelectionScreenState extends State<WebVariantSelectionScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              WebVarientPriceScreen(
+                                              WebLocationPopup(
                                               ),
                                         ),
                                       );
@@ -219,7 +219,7 @@ class _WebVariantSelectionScreenState extends State<WebVariantSelectionScreen> {
               padding: const EdgeInsets.symmetric(vertical: 40),
               alignment: Alignment.center,
               child: const Text(
-                "© 2025 DOFY. All rights reserved.",
+                "© 2025 MEESAFE. All rights reserved.",
                 style: TextStyle(color: Colors.black54, fontSize: 14),
               ),
             ),

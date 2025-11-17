@@ -6,7 +6,7 @@ class FaqScreen extends StatelessWidget {
   final List<Map<String, String>> faqs = const [
     {
       'question': 'How can I sell my old mobile devices?',
-      'answer': 'You can sell your old devices by selecting the device type and brand, then following the step-by-step instructions on the app.'
+      'answer': 'You can register your old devices by selecting the device type and brand, then following the step-by-step instructions on the app.'
     },
     {
       'question': 'Is there a service fee?',

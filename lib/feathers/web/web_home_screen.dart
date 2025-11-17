@@ -5,6 +5,9 @@ import 'package:mee_safe/feathers/constants/app_colors.dart';
 import 'package:mee_safe/feathers/user/order_screen.dart';
 import 'package:mee_safe/feathers/user/our_store_screen.dart';
 import 'package:mee_safe/feathers/user/user_drawer.dart';
+import 'package:mee_safe/feathers/user/user_review_screen.dart';
+import 'package:mee_safe/feathers/user/user_warrenty_claim_screen.dart';
+import 'package:mee_safe/feathers/web/choose_role_screen.dart';
 import 'package:mee_safe/feathers/web/web_blog_screen.dart';
 import 'package:mee_safe/feathers/web/web_corporate_trade_page.dart';
 import 'package:mee_safe/feathers/web/web_faqs_screen.dart';
@@ -14,6 +17,7 @@ import 'package:mee_safe/feathers/web/web_profile_screen.dart';
 import 'package:mee_safe/feathers/web/web_sell_screen.dart';
 import 'package:mee_safe/feathers/web/web_store_locator_screen.dart';
 import 'package:mee_safe/feathers/web/web_terms_and_conditions_screen.dart';
+import 'package:mee_safe/feathers/web/web_user_warranty_registration.dart';
 
 class WebHomeScreen extends StatefulWidget {
   const WebHomeScreen({super.key});
@@ -132,94 +136,6 @@ class _WebHomeScreenState extends State<WebHomeScreen> {
       ),
     );
   }
-
-  Widget _navDropdown(String title, List<String> items) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hoveredMenu = title),
-      onExit: (_) => setState(() => _hoveredMenu = null),
-      child: PopupMenuButton<String>(
-        tooltip: title,
-        offset: const Offset(0, 45),
-        onSelected: (value) {
-          if (value.startsWith('Sell')) {
-            setState(() {
-              _selectedScreen = const WebSellScreen();
-            });
-          } else if (value == 'Terms and conditions') {
-            setState(() {
-              _selectedScreen = const WebTermsAndConditionsScreen();
-            });
-          } else if (value == 'Private Policy') {
-            setState(() {
-              _selectedScreen = const WebPrivatePolicyScreen();
-            });
-          } else if (value == 'FAQ') {
-            setState(() {
-              _selectedScreen = const WebFaqsScreen();
-            });
-          }
-        },
-        itemBuilder: (context) => items
-            .map(
-              (e) => PopupMenuItem<String>(
-                value: e,
-                child: Text(e),
-              ),
-            )
-            .toList(),
-        child: Row(
-          children: [
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 150),
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight:
-                    _hoveredMenu == title ? FontWeight.bold : FontWeight.w500,
-                color: _hoveredMenu == title ? Colors.red : Colors.black87,
-              ),
-              child: Text(title),
-            ),
-            const Icon(Icons.keyboard_arrow_down_rounded, size: 18),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 🔸 DEVICE CARDS
-  Widget _deviceCard(String title, IconData icon) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 200,
-        height: 110,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: InkWell(
-          onTap: () {},
-          hoverColor: Colors.transparent,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 40, color: AppColors.primary),
-              const SizedBox(height: 10),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class WebHeaderNav extends StatefulWidget {
@@ -231,120 +147,117 @@ class WebHeaderNav extends StatefulWidget {
 
 class _WebHeaderNavState extends State<WebHeaderNav> {
   String? _hoveredMenu;
-
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // ✅ Header (Logo + Search + Login)
-        Container(
-          height: 90,
-          padding: const EdgeInsets.symmetric(horizontal: 70),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 8,
-                offset: Offset(0, 2),
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      // Header: Logo + Center Nav + Right buttons
+      Container(
+        height: 90,
+        padding: const EdgeInsets.symmetric(horizontal: 70),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // LEFT: Logo
+            const Text(
+              "Mee Safe",
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+            ),
+
+            const SizedBox(width: 50),
+
+            // CENTER: Navigation bar
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.menu, size: 26),
-                    onPressed: () {
-                      // Open the sidebar in parent WebHomeScreen
-                      final parent = context
-                          .findAncestorStateOfType<_WebHomeScreenState>();
-                      parent?.openSidebar();
-                    },
-                  ),
-                  SizedBox(width: 50,),
-                  const Text(
-                    "Mee Safe",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-                  ),
-                  const SizedBox(width: 40),
-                  SizedBox(
-                    width: 350,
-                    height: 38,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search mobile phones, laptops and more...',
-                        hintStyle:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
-                        prefixIcon: const Icon(Icons.search,
-                            color: Colors.grey, size: 20),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                      ),
-                    ),
-                  ),
+                  _navItem('Home'),
+                  const SizedBox(width: 25),
+                  _navItem('Corporate Trade-In'),
+                  const SizedBox(width: 25),
+                  _navItem('Our Stores'),
+                  const SizedBox(width: 25),
+                  _navItem('Blogs'),
+                  const SizedBox(width: 25),
+                  _navDropdown('More', [
+                    'Registered Warranty',
+                    'Review',
+                    'FAQ',
+                    'Terms and conditions',
+                    'Private Policy',
+                  ]),
                 ],
               ),
-              Row(
-                children: [
-                   OutlinedButton(
-                    onPressed: () {
-                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const MyOrdersScreen()),
-                        );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      side: const BorderSide(color: Colors.black12),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 22, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'My Orders',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                    ),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      showWebPopup(context, LoginDialog());
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      side: const BorderSide(color: Colors.black12),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 22, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Login / Sign up',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+            ),
+
+            const SizedBox(width: 20),
+
+      // ✅ SEARCH FIELD
+     IconButton(onPressed: (){}, icon: Icon(Icons.search)),
+
+            // RIGHT: Orders + Login/Profile buttons
+            Row(
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MyOrdersScreen()),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black12),
+                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  PopupMenuButton<String>(
+                  child: const Text(
+                    'My Orders',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                OutlinedButton(
+                  onPressed: () {
+                    showWebPopup(context, LoginDialog());
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(color: Colors.black12),
+                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Login / Sign up',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                ),
+                  const SizedBox(width: 10),
+                PopupMenuButton<String>(
                     offset: const Offset(0, 45),
                     elevation: 4,
                     onSelected: (value) {
-                      if (value == 'profile') {
+                      if (value == 'choose role') {
+                        showWebPopup(context, const ChooseRoleDialog());
+                      } else if (value == 'profile') {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -359,6 +272,16 @@ class _WebHeaderNavState extends State<WebHeaderNav> {
                       }
                     },
                     itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'choose role',
+                        child: Row(
+                          children: [
+                            Icon(Icons.person_outline, size: 18),
+                            SizedBox(width: 10),
+                            Text("choose role"),
+                          ],
+                        ),
+                      ),
                       const PopupMenuItem(
                         value: 'profile',
                         child: Row(
@@ -396,58 +319,17 @@ class _WebHeaderNavState extends State<WebHeaderNav> {
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 15),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
+                    ),)
+              ],
+            ),
+          ],
         ),
+      ),
+      const Divider(height: 1, color: Colors.black12),
+    ],
+  );
+}
 
-        // ✅ Navigation Bar
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _navItemWithIcon(
-                      Icons.location_on_outlined, 'Select your location'),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _navDropdown('Sell Device', [
-                    'Sell Phone',
-                    'Sell Tablet',
-                    'Sell Laptop',
-                    'Sell Console',
-                  ]),
-                  const SizedBox(width: 25),
-                  _navItem('Corporate Trade-In'),
-                  const SizedBox(width: 25),
-                  _navItem('Our Stores'),
-                  const SizedBox(width: 25),
-                  _navItem('Blogs'),
-                  const SizedBox(width: 25),
-                  _navDropdown('More', [
-                    'FAQ',
-                    'Terms and conditions',
-                    'Private Policy',
-                  ]),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const Divider(height: 1, color: Colors.black12),
-      ],
-    );
-  }
 
   // ✅ Individual menu item
   Widget _navItem(String label) {
@@ -456,6 +338,12 @@ class _WebHeaderNavState extends State<WebHeaderNav> {
       onExit: (_) => setState(() => _hoveredMenu = null),
       child: GestureDetector(
         onTap: () {
+          if (label == 'Home') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const WebSellScreen()),
+            );
+          } 
           if (label == 'Corporate Trade-In') {
             Navigator.push(
               context,
@@ -494,12 +382,28 @@ class _WebHeaderNavState extends State<WebHeaderNav> {
       child: PopupMenuButton<String>(
         offset: const Offset(0, 45),
         onSelected: (value) {
-          if (value.startsWith('Sell')) {
+          if (value.startsWith('Home')) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const WebSellScreen()),
             );
-          } else if (value == 'Terms and conditions') {
+          } else
+          if (value == 'Registered Warranty') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const UserWarrantyClaimScreen()),
+            );
+          }
+           if (value == 'Review') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const UserReviewScreen()),
+            );
+          }
+          else
+          if (value == 'Terms and conditions') {
             Navigator.push(
               context,
               MaterialPageRoute(

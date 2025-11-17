@@ -58,7 +58,7 @@ class _WebModelSelectorScreenState extends State<WebModelSelectorScreen> {
                   ),
                   const Icon(Icons.chevron_right, color: Colors.black54),
                   Text(
-                    "Sell ${widget.brandName} Models",
+                    "${widget.brandName} Models",
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
@@ -70,7 +70,7 @@ class _WebModelSelectorScreenState extends State<WebModelSelectorScreen> {
 
             // 🔹 Title
             Text(
-              "Sell ${widget.brandName} Models to Sell",
+              "${widget.brandName} Models",
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -164,7 +164,7 @@ class _WebModelSelectorScreenState extends State<WebModelSelectorScreen> {
               child: const Column(
                 children: [
                   Text(
-                    "© 2025 DOFY. All rights reserved.",
+                    "© 2025 MEESAFE. All rights reserved.",
                     style: TextStyle(color: Colors.black54, fontSize: 14),
                   ),
                 ],

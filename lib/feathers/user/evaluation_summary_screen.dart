@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
-import 'package:mee_safe/feathers/user/user_plan_screen.dart';
+import 'package:mee_safe/feathers/user/user_warrenty_registration.dart';
 
 class EvaluationSummaryScreen extends StatelessWidget {
   const EvaluationSummaryScreen({super.key});
@@ -131,13 +131,20 @@ class EvaluationSummaryScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-             Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const UserPlanScreen()),
-  );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => UserWarrantyRegistrationScreen(
+                  selectedDevice: "Mobile",
+                  selectedBrand: "Samsung",
+                  selectedModel: "S25",
+                ),
+              ),
+            );
+
           },
           child: const Text(
-            "Finish",
+            "Next",
             style: TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           ),

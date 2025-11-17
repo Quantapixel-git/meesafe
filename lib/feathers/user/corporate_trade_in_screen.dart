@@ -74,7 +74,7 @@ class CorporateInTradeScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Icon(Icons.email_outlined, color: primaryColor),
                 const SizedBox(width: 8),
-                const Text('info@dofy.in', style: TextStyle(fontSize: 15)),
+                const Text('info@meesafe.in', style: TextStyle(fontSize: 15)),
               ],
             ),
 

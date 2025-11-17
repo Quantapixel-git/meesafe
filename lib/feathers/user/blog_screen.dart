@@ -19,7 +19,7 @@ class BlogsScreen extends StatelessWidget {
         'date': '28 Oct 2025',
         'title': "Top Tips to Increase Your Old Phone’s Value Before Selling",
         'desc':
-            "Before you sell your old phone, follow these simple yet powerful tips to boost your resale price instantly."
+            "Before you registered old phone, follow these simple yet powerful tips to boost your resale price instantly."
       },
     ];
 

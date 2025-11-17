@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mee_safe/feathers/constants/app_colors.dart';
 import 'package:mee_safe/feathers/web/web_home_screen.dart';
 import 'package:pinput/pinput.dart';
 
@@ -92,7 +93,8 @@ class LoginDialog extends StatelessWidget {
               height: 45,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
@@ -119,7 +121,7 @@ class LoginDialog extends StatelessWidget {
                       MaterialPageRoute(builder: (_) => OTPScreen(isSignup: true)));
                   },
                   child: const Text("Sign Up",
-                      style: TextStyle(color: Colors.redAccent)),
+                      style: TextStyle(color: AppColors.primary)),
                 )
               ],
             ),
@@ -275,7 +277,8 @@ class OTPScreen extends StatelessWidget {
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                   ),

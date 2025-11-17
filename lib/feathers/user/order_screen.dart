@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
-import 'package:mee_safe/feathers/user/evaluation_summary_screen.dart';
+import 'package:mee_safe/feathers/user/user_evaluation_mobile_screen.dart';
 import 'package:mee_safe/feathers/web/web_warranty_condition_screen.dart';
 
 class MyOrdersScreen extends StatefulWidget {
@@ -211,7 +211,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EvaluationSummaryScreen(),
+        builder: (context) => UserEvaluationMobileScreen(),
       ),
     );
   }

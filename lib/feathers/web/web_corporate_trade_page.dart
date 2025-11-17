@@ -70,7 +70,7 @@ class WebCorporateTradePage extends StatelessWidget {
                             children: const [
                               Icon(Icons.email_outlined, color: Colors.red, size: 20),
                               SizedBox(width: 8),
-                              Text("info@dofy.in", style: TextStyle(fontSize: 15)),
+                              Text("info@meesafe.in", style: TextStyle(fontSize: 15)),
                             ],
                           ),
                         ],

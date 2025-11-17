@@ -19,7 +19,7 @@ class SellScreenMobile extends StatelessWidget {
           const SizedBox(height: 20),
 
           Text(
-            "Sell Your Mobile for the Highest Price",
+            "Register Your Mobile",
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w800,
@@ -74,7 +74,7 @@ class SellScreenMobile extends StatelessWidget {
               );
             },
             child: const Text(
-              "Sell All Brands",
+              " All Brands",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -158,7 +158,7 @@ class SellScreenWeb extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                "Sell Your Mobile for the Highest Price",
+                "Registered Mobile for the given Price",
                 style: const TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.w800,
@@ -214,7 +214,7 @@ class SellScreenWeb extends StatelessWidget {
                   );
                 },
                 child: const Text(
-                  "Sell All Brands",
+                  " All Brands",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,

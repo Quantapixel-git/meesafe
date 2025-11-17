@@ -77,7 +77,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              'We do not sell your personal information. We may share it with trusted service providers for app functionality or legal reasons.',
+              'We do not registered personal information. We may share it with trusted service providers for app functionality or legal reasons.',
               style: TextStyle(fontSize: 16, height: 1.5),
             ),
             SizedBox(height: 20),

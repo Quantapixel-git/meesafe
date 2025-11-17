@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
 import 'package:mee_safe/feathers/user/sell_screen.dart';
 import 'package:mee_safe/feathers/web/web_brand_selection_screen.dart';
+import 'package:mee_safe/feathers/web/web_footer_secton.dart';
 import 'package:mee_safe/feathers/web/web_home_screen.dart';
 
 class WebSellScreen extends StatelessWidget {
@@ -85,15 +86,6 @@ Widget _whyWeBestSection(bool isWide) {
                     color: AppColors.primary,
                   ),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'Sell your device at the best price — quick, easy & secure.',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
               ],
             ),
 
@@ -162,7 +154,7 @@ CarouselSlider(
 
             // 🔹 MAIN TITLE
             const Text(
-              'Sell Any Device, Anytime — Only on Mee Safe!',
+              'Registered Any Device, Anytime — Only on Mee Safe!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 22,
@@ -253,7 +245,6 @@ Padding(
 
             const SizedBox(height: 40),
 
-            // 🔹 SELL ALL DEVICES BUTTON
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
@@ -266,7 +257,7 @@ Padding(
                 ),
               ),
               child: const Text(
-                'Sell all devices',
+                'all devices',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
@@ -291,6 +282,7 @@ Padding(
 
             // ✅ DOWNLOAD NOW SECTION
             _downloadNowSection(isWide),
+            FooterSection(),
 
             const SizedBox(height: 80),
           ],
@@ -326,7 +318,7 @@ Padding(
           end: Alignment.bottomCenter,
           colors: [
             Colors.white,
-            Color.fromARGB(255, 199, 198, 248), // soft pink gradient like DOFY
+            Color.fromARGB(255, 199, 198, 248), // soft pink gradient like MEESAFE
           ],
         ),
       ),

@@ -17,7 +17,7 @@ class SellBrandsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sell Maximum Brand of Mobile'),
+        title: const Text('Maximum Brand of Mobile'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),

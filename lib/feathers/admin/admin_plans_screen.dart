@@ -21,7 +21,7 @@ class _AdminPlansScreenState extends State<AdminPlansScreen> {
     {
       "id": 2,
       "name": "Premium Plan",
-      "role": "Agency Owner",
+      "role": "Branch Owner",
       "amount": 499,
       "features": "All tools + Priority Support",
       "duration": "3 Months",
@@ -123,7 +123,7 @@ class _AddEditPlanScreenState extends State<AddEditPlanScreen> {
   final List<TextEditingController> _featureControllers = [];
   String? _selectedRole;
 
-  final List<String> _roles = ["Vendor", "Agency", "User"];
+  final List<String> _roles = ["Vendor", "Branch", "User"];
 
   @override
   void initState() {

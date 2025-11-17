@@ -204,7 +204,7 @@ class BlogHeader extends StatelessWidget {
                 Text("Select your location",
                     style: TextStyle(color: Colors.black54)),
                 SizedBox(width: 30),
-                Text("Sell Device"),
+                Text("Home"),
                 SizedBox(width: 30),
                 Text("Corporate Trade-In"),
                 SizedBox(width: 30),
@@ -346,7 +346,7 @@ class BlogFooter extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      "Download the DOFY app and get the best deals for your device",
+                      "Download the Mee Safe app and get the best deals for your device",
                       style: TextStyle(fontSize: 13),
                     ),
                     const SizedBox(height: 10),
