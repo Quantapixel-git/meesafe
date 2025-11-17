@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
+import 'package:mee_safe/feathers/admin/admin_drawer.dart';
 
 class AdminClaimApprovalScreen extends StatefulWidget {
   const AdminClaimApprovalScreen({super.key});
@@ -50,6 +51,9 @@ class _AdminClaimApprovalScreenState extends State<AdminClaimApprovalScreen>
     _tabController = TabController(length: 3, vsync: this);
   }
 
+  // ============================================================================
+  // VIEW CLAIM DETAILS POPUP
+  // ============================================================================
   void _viewClaimDetails(Map<String, dynamic> claim) {
     showDialog(
       context: context,
@@ -115,15 +119,18 @@ class _AdminClaimApprovalScreenState extends State<AdminClaimApprovalScreen>
     );
   }
 
+  // ============================================================================
+  // REJECT WITH REASON
+  // ============================================================================
   void _rejectClaimWithReason(Map<String, dynamic> claim) {
-    final TextEditingController reasonController = TextEditingController();
+    final controller = TextEditingController();
 
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Reject Claim"),
         content: TextField(
-          controller: reasonController,
+          controller: controller,
           decoration: const InputDecoration(
             labelText: "Enter Rejection Reason",
             border: OutlineInputBorder(),
@@ -139,7 +146,7 @@ class _AdminClaimApprovalScreenState extends State<AdminClaimApprovalScreen>
             onPressed: () {
               Navigator.pop(context);
               _updateClaimStatus(claim, false,
-                  rejectionReason: reasonController.text);
+                  rejectionReason: controller.text);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text("Reject Claim"),
@@ -149,6 +156,9 @@ class _AdminClaimApprovalScreenState extends State<AdminClaimApprovalScreen>
     );
   }
 
+  // ============================================================================
+  // UPDATE STATUS
+  // ============================================================================
   void _updateClaimStatus(Map<String, dynamic> claim, bool approved,
       {String? rejectionReason}) {
     setState(() {
@@ -165,15 +175,68 @@ class _AdminClaimApprovalScreenState extends State<AdminClaimApprovalScreen>
           approved
               ? (claim['refundEligible']
                   ? "✅ Claim approved — Refund or repair initiated."
-                  : "✅ Claim approved — Repair process started.")
-              : "❌ Claim rejected${claim['refundEligible'] ? ' — No refund as per policy.' : '.'}",
+                  : "✅ Claim approved — Repair started.")
+              : "❌ Claim rejected.",
         ),
-        backgroundColor: approved ? Colors.green : AppColors.primary,
+        backgroundColor: approved ? Colors.green : Colors.red,
       ),
     );
   }
 
-  Widget _buildClaimCard(Map<String, dynamic> claim) {
+  // ============================================================================
+  // DESKTOP TAB BAR (BEAUTIFUL)
+  // ============================================================================
+  Widget _desktopTabBar() {
+    return Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _desktopTab("Pending", 0),
+          const SizedBox(width: 16),
+          _desktopTab("Approved", 1),
+          const SizedBox(width: 16),
+          _desktopTab("Rejected", 2),
+        ],
+      ),
+    );
+  }
+
+  Widget _desktopTab(String title, int index) {
+    final selected = _tabController.index == index;
+
+    return InkWell(
+      onTap: () {
+        _tabController.animateTo(index);
+        setState(() {});
+      },
+      borderRadius: BorderRadius.circular(40),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 26, vertical: 12),
+        decoration: BoxDecoration(
+          color: selected ? Colors.white : Colors.white.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.4),
+          ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: selected ? AppColors.primary : Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ============================================================================
+  // CLAIM CARD UI (RESPONSIVE)
+  // ============================================================================
+  Widget _buildClaimCard(Map<String, dynamic> claim, bool isDesktop) {
     Color statusColor;
     switch (claim['status']) {
       case "Approved":
@@ -186,80 +249,219 @@ class _AdminClaimApprovalScreenState extends State<AdminClaimApprovalScreen>
         statusColor = Colors.orange;
     }
 
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        leading: Icon(Icons.assignment, color: AppColors.primary),
-        title: Text("IMEI: ${claim['imei']}"),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("User: ${claim['user_name']}"),
-            Text("Status: ${claim['status']}",
-                style: TextStyle(color: statusColor)),
-          ],
-        ),
-        trailing: ElevatedButton(
-          onPressed: () => _viewClaimDetails(claim),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("IMEI: ${claim['imei']}",
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text("User: ${claim['user_name']}"),
+          Text("Status: ${claim['status']}",
+              style: TextStyle(color: statusColor)),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: () => _viewClaimDetails(claim),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              ),
+              child: const Text("View",style: TextStyle(color: Colors.white),),
+            ),
           ),
-          child: const Text("View"),
+          // EXTRA ADMIN CONTENT
+const SizedBox(height: 10),
+
+Container(
+  padding: const EdgeInsets.all(12),
+  decoration: BoxDecoration(
+    color: Colors.grey.shade100,
+    borderRadius: BorderRadius.circular(10),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: const [
+          Icon(Icons.info_outline, size: 18, color: Colors.black54),
+          SizedBox(width: 6),
+          Text(
+            "Issue Details",
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+      const SizedBox(height: 6),
+      Text(
+        claim["issue"] ?? "-",
+        style: const TextStyle(color: Colors.black87),
+      ),
+    ],
+  ),
+),
+
+const SizedBox(height: 12),
+
+Row(
+  children: [
+    Icon(
+      claim['refundEligible'] ? Icons.check_circle : Icons.cancel,
+      color: claim['refundEligible'] ? Colors.green : Colors.red,
+      size: 18,
+    ),
+    const SizedBox(width: 6),
+    Text(
+      claim['refundEligible']
+          ? "Refund Eligible"
+          : "Not Eligible for Refund",
+      style: TextStyle(
+        color: claim['refundEligible'] ? Colors.green : Colors.red,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  ],
+),
+
+const SizedBox(height: 12),
+
+Container(
+  padding: const EdgeInsets.all(10),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(8),
+    color: Colors.white,
+    border: Border.all(color: Colors.black12),
+  ),
+  child: Row(
+    children: [
+      const Icon(Icons.verified, color: Colors.green, size: 20),
+      const SizedBox(width: 8),
+      Text(
+        "Documents Uploaded",
+        style: TextStyle(
+          color: Colors.green.shade700,
+          fontWeight: FontWeight.w600,
         ),
+      ),
+    ],
+  ),
+),
+
+        ],
       ),
     );
   }
 
-  Widget _buildClaimList(String status) {
-    final filteredClaims =
+  // ============================================================================
+  // LIST BUILDER - DESKTOP = GRID | MOBILE = LIST
+  // ============================================================================
+  Widget _buildClaimList(String status, bool isDesktop) {
+    final filtered =
         claims.where((claim) => claim['status'] == status).toList();
 
-    if (filteredClaims.isEmpty) {
+    if (filtered.isEmpty) {
+      return const Center(
+        child: Text("No claims found.",
+            style: TextStyle(fontSize: 16, color: Colors.grey)),
+      );
+    }
+
+    if (isDesktop) {
       return Center(
-        child: Text(
-          "No $status claims found.",
-          style: const TextStyle(color: Colors.grey, fontSize: 16),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1100),
+          padding: const EdgeInsets.all(20),
+          child: GridView.builder(
+            itemCount: filtered.length,
+            gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 22,
+              mainAxisSpacing: 22,
+              childAspectRatio: 1.6,
+            ),
+            itemBuilder: (_, i) => _buildClaimCard(filtered[i], true),
+          ),
         ),
       );
     }
 
+    // MOBILE LIST
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: filteredClaims.length,
-      itemBuilder: (context, index) =>
-          _buildClaimCard(filteredClaims[index]),
+      itemCount: filtered.length,
+      itemBuilder: (_, i) => _buildClaimCard(filtered[i], false),
     );
   }
 
+  // ============================================================================
+  // BUILD
+  // ============================================================================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Admin Claim Approvals"),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          tabs: const [
-            Tab(text: "Pending"),
-            Tab(text: "Approved"),
-            Tab(text: "Rejected"),
+    return LayoutBuilder(builder: (context, constraints) {
+      final isDesktop = constraints.maxWidth >= 900;
+
+      return Scaffold(
+        drawer: isDesktop ? null : const AdminDrawer(),
+
+        appBar: AppBar(
+          title: const Text("Admin Claim Approvals"),
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          elevation: isDesktop ? 5 : 0,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(55),
+            child: isDesktop
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _desktopTabBar(),
+                  )
+                : TabBar(
+                    controller: _tabController,
+                    indicatorColor: Colors.white,
+                    tabs: const [
+                      Tab(text: "Pending"),
+                      Tab(text: "Approved"),
+                      Tab(text: "Rejected"),
+                    ],
+                  ),
+          ),
+        ),
+
+        body: Row(
+          children: [
+            if (isDesktop)
+              const SizedBox(width: 250, child: AdminDrawer()),
+
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildClaimList("Pending", isDesktop),
+                  _buildClaimList("Approved", isDesktop),
+                  _buildClaimList("Rejected", isDesktop),
+                ],
+              ),
+            )
           ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildClaimList("Pending"),
-          _buildClaimList("Approved"),
-          _buildClaimList("Rejected"),
-        ],
-      ),
-    );
+      );
+    });
   }
 }

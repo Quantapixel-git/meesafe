@@ -283,7 +283,7 @@ class FooterSection extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          color: const Color(0xFFF8F8F8),
+          color: Colors.grey,
           padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 40),
           child: Wrap(
             spacing: 40,

@@ -17,70 +17,95 @@ class VendorDashboardScreen extends StatelessWidget {
     final int totalProducts = 75;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
-      appBar: AppBar(
-        title: const Text("Vendor Dashboard"),
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
-        centerTitle: true,
-      ),
-      drawer: const VendorDrawer(), 
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-
-            // 🔹 Stats cards grid
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 14,
-              childAspectRatio: 1.2,
-              children: [
-                _buildStatCard(
-                  "Active Warranties",
-                  activeWarranties,
-                  Icons.verified,
-                  Colors.green,
-                ),
-                _buildStatCard(
-                  "Expired Warranties",
-                  expiredWarranties,
-                  Icons.warning,
-                  AppColors.primary,
-                ),
-                _buildStatCard(
-                  "Total Companies",
-                  totalCustomers,
-                  Icons.people,
-                  Colors.blue,
-                ),
-                 _buildStatCard(
-                  "Company approved",
-                  totalCompanyApproved,
-                  Icons.people,
-                  Colors.deepOrange,
-                ),
-                  _buildStatCard(
-                  "Company Pending",
-                  totalCompanyPending,
-                  Icons.people,
-                  Colors.deepOrange,
-                ),
-                _buildStatCard(
-                  "Products",
-                  totalProducts,
-                  Icons.devices_other,
-                  Colors.orange,
-                ),
-              ],
-            ),
-          ],
+        backgroundColor: const Color(0xFFF5F6FA),
+        appBar: AppBar(
+          title: const Text("Vendor Dashboard"),
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.white,
+          centerTitle: true,
         ),
-      ),
-    );
+        drawer: const VendorDrawer(),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            final bool isDesktop = constraints.maxWidth > 900;
+
+            return
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final bool isDesktop = constraints.maxWidth > 900;
+
+                return Row(
+                  children: [
+                    // ---------------- DESKTOP SIDEBAR ----------------
+                    if (isDesktop)
+                      SizedBox(
+                        width: 260,
+                        child: const VendorDrawer(),
+                      ),
+
+                    // ---------------- MAIN CONTENT ----------------
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: ListView(
+                          children: [
+                            GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount:
+                                  isDesktop ? 4 : 2, // Desktop → 4 columns
+                              mainAxisSpacing: 20,
+                              crossAxisSpacing: 20,
+                              childAspectRatio: isDesktop ? 1.4 : 1.2,
+                              children: [
+                                _buildStatCard(
+                                  "Active Warranties",
+                                  activeWarranties,
+                                  Icons.verified,
+                                  Colors.green,
+                                ),
+                                _buildStatCard(
+                                  "Expired Warranties",
+                                  expiredWarranties,
+                                  Icons.warning,
+                                  AppColors.primary,
+                                ),
+                                _buildStatCard(
+                                  "Total Companies",
+                                  totalCustomers,
+                                  Icons.people,
+                                  Colors.blue,
+                                ),
+                                _buildStatCard(
+                                  "Company Approved",
+                                  totalCompanyApproved,
+                                  Icons.check_circle,
+                                  Colors.teal,
+                                ),
+                                _buildStatCard(
+                                  "Company Pending",
+                                  totalCompanyPending,
+                                  Icons.pending_actions,
+                                  Colors.deepOrange,
+                                ),
+                                _buildStatCard(
+                                  "Products",
+                                  totalProducts,
+                                  Icons.devices_other,
+                                  Colors.orange,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ));
   }
 
   // 🔹 Stat card widget

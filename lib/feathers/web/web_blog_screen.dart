@@ -311,7 +311,7 @@ class BlogFooter extends StatelessWidget {
     return Column(
       children: [
         Container(
-          color: const Color(0xFFF8F8F8),
+          color:  Colors.grey,
           padding:
               const EdgeInsets.symmetric(horizontal: 80, vertical: 40),
           child: Row(

@@ -15,9 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mee Safe',
       debugShowCheckedModeBanner: false,
-
       home: kIsWeb ? WebHomeScreen() : SplashScreen(),
-
     );
   }
 }

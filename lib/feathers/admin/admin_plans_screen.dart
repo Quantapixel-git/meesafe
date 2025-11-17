@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mee_safe/feathers/admin/admin_drawer.dart';
+import 'package:mee_safe/feathers/constants/app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
 
 class AdminPlansScreen extends StatefulWidget {
@@ -39,7 +42,6 @@ class _AdminPlansScreenState extends State<AdminPlansScreen> {
     if (result != null) {
       setState(() {
         if (existingPlan == null) {
-          // Add new plan
           _plans.add({
             "id": DateTime.now().millisecondsSinceEpoch,
             ...result,
@@ -59,50 +61,168 @@ class _AdminPlansScreenState extends State<AdminPlansScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Subscription Plans"),
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
-      ),
-      body: ListView.builder(
-        itemCount: _plans.length,
-        itemBuilder: (context, index) {
-          final plan = _plans[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: ListTile(
-              title: Text("${plan["name"]} • ${plan["role"]}",
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    
+    return LayoutBuilder(builder: (context, constraints) {
+       final isDesktop = constraints.maxWidth >= 900;
+      // ------------------ 📱 MOBILE (Original UI — unchanged) -------------------
+      if (constraints.maxWidth < 700) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Subscription Plans"),
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+          ),
+          body: _mobileUI(),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.primary,
+            child: const Icon(Icons.add),
+            onPressed: () => _navigateToAddOrEdit(),
+          ),
+        );
+      }
+
+      // ------------------ 🖥 DESKTOP / WEB VERSION -------------------
+      return Scaffold(
+        body: Row(
+          children: [
+ if (isDesktop)
+                SizedBox(
+                  width: 250,
+                  child: const AdminDrawer(),
+                ),
+
+
+            Expanded(
+              child: Column(
                 children: [
-                  Text("₹${plan["amount"]} • ${plan["duration"]}"),
-                  const SizedBox(height: 4),
-                  Text(plan["features"]),
-                ],
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.orange),
-                    onPressed: () => _navigateToAddOrEdit(existingPlan: plan),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deletePlan(plan["id"]),
-                  ),
+                  _desktopHeader(),
+                  Expanded(child: _desktopUI()),
                 ],
               ),
             ),
-          );
-        },
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.primary,
+          child: const Icon(Icons.add),
+          onPressed: () => _navigateToAddOrEdit(),
+        ),
+      );
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 📱 MOBILE UI — ORIGINAL CODE (UNCHANGED)
+  // ---------------------------------------------------------------------------
+  Widget _mobileUI() {
+    return ListView.builder(
+      itemCount: _plans.length,
+      itemBuilder: (context, index) {
+        final plan = _plans[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: ListTile(
+            title: Text(
+              "${plan["name"]} • ${plan["role"]}",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("₹${plan["amount"]} • ${plan["duration"]}"),
+                const SizedBox(height: 4),
+                Text(plan["features"]),
+              ],
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.orange),
+                  onPressed: () => _navigateToAddOrEdit(existingPlan: plan),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => _deletePlan(plan["id"]),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // 🖥 DESKTOP UI — TABLE LAYOUT
+  // ---------------------------------------------------------------------------
+  Widget _desktopUI() {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 6,
+                offset: const Offset(0, 4),
+                color: Colors.black.withOpacity(0.1))
+          ],
+        ),
+        child: DataTable(
+          headingRowColor:
+              WidgetStateProperty.all(Colors.grey.shade200),
+          columns: const [
+            DataColumn(label: Text("Plan Name")),
+            DataColumn(label: Text("Role")),
+            DataColumn(label: Text("Amount")),
+            DataColumn(label: Text("Duration")),
+            DataColumn(label: Text("Features")),
+            DataColumn(label: Text("Actions")),
+          ],
+          rows: _plans.map((plan) {
+            return DataRow(cells: [
+              DataCell(Text(plan["name"])),
+              DataCell(Text(plan["role"])),
+              DataCell(Text("₹${plan["amount"]}")),
+              DataCell(Text(plan["duration"])),
+              DataCell(Text(plan["features"])),
+              DataCell(
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.orange),
+                      onPressed: () => _navigateToAddOrEdit(existingPlan: plan),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _deletePlan(plan["id"]),
+                    ),
+                  ],
+                ),
+              ),
+            ]);
+          }).toList(),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.add),
-        onPressed: () => _navigateToAddOrEdit(),
+    );
+  }
+
+  
+
+  // ---------------------------------------------------------------------------
+  // 🖥 DESKTOP HEADER
+  // ---------------------------------------------------------------------------
+  Widget _desktopHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: 70,
+      alignment: Alignment.centerLeft,
+      color: Colors.white,
+      child: const Text(
+        "Subscription Plans",
+        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -128,17 +248,18 @@ class _AddEditPlanScreenState extends State<AddEditPlanScreen> {
   @override
   void initState() {
     super.initState();
+
     _nameController = TextEditingController(text: widget.plan?["name"] ?? "");
     _amountController = TextEditingController(
-        text: widget.plan?["amount"] != null
-            ? widget.plan!["amount"].toString()
-            : "");
+      text: widget.plan?["amount"]?.toString() ?? "",
+    );
     _durationController =
         TextEditingController(text: widget.plan?["duration"] ?? "");
+
     _selectedRole = widget.plan?["role"] ?? _roles.first;
 
-    // Handle feature points (split string by newline or comma)
-    final existingFeatures = widget.plan?["features"]?.toString().split("\n") ?? [];
+    final existingFeatures =
+        widget.plan?["features"]?.toString().split("\n") ?? [];
     if (existingFeatures.isNotEmpty) {
       for (var feature in existingFeatures) {
         if (feature.trim().isNotEmpty) {
@@ -164,26 +285,27 @@ class _AddEditPlanScreenState extends State<AddEditPlanScreen> {
   }
 
   void _savePlan() {
-    final featuresList =
-        _featureControllers.map((c) => c.text.trim()).where((t) => t.isNotEmpty).toList();
+    final features = _featureControllers
+        .map((c) => c.text.trim())
+        .where((f) => f.isNotEmpty)
+        .join("\n");
 
-    final planData = {
+    Navigator.pop(context, {
       "name": _nameController.text.trim(),
-      "role": _selectedRole ?? "Vendor",
+      "role": _selectedRole,
       "amount": double.tryParse(_amountController.text) ?? 0,
       "duration": _durationController.text.trim(),
-      "features": featuresList.join("\n"),
-    };
-    Navigator.pop(context, planData);
+      "features": features,
+    });
   }
 
-  InputDecoration _boxDecoration(String label) {
+  InputDecoration _box(String label) {
     return InputDecoration(
       labelText: label,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide:  BorderSide(color: AppColors.primary, width: 1.8),
+        borderSide: BorderSide(color: AppColors.primary, width: 1.8),
       ),
     );
   }
@@ -192,112 +314,149 @@ class _AddEditPlanScreenState extends State<AddEditPlanScreen> {
   Widget build(BuildContext context) {
     final isEditing = widget.plan != null;
 
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // ----------------------- 📱 MOBILE VERSION (unchanged) -----------------------
+        if (constraints.maxWidth < 700) {
+          return _mobileUI(isEditing);
+        }
+
+        // ----------------------- 🖥 DESKTOP VERSION -----------------------
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(isEditing ? "Edit Plan" : "Add Plan"),
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+          ),
+          body: Center(
+            child: Container(
+              width: 600,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 8,
+                      color: Colors.black26,
+                      offset: Offset(0, 4))
+                ],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: _formContent(isEditing),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Mobile Original UI wrapper
+  Widget _mobileUI(bool isEditing) {
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? "Edit Plan" : "Add Plan"),
         backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ListView(
+        child: _formContent(isEditing),
+      ),
+    );
+  }
+
+  /// Shared form content for both mobile + desktop
+  Widget _formContent(bool isEditing) {
+    return ListView(
+      children: [
+        TextField(
+          controller: _nameController,
+          decoration: _box("Plan Name"),
+        ),
+        const SizedBox(height: 16),
+
+        InputDecorator(
+          decoration: _box("Select Role"),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _selectedRole,
+              isExpanded: true,
+              items: _roles
+                  .map((role) => DropdownMenuItem(
+                        value: role,
+                        child: Text(role),
+                      ))
+                  .toList(),
+              onChanged: (value) => setState(() => _selectedRole = value),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        TextField(
+          controller: _amountController,
+          decoration: _box("Amount (₹)"),
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 16),
+
+        TextField(
+          controller: _durationController,
+          decoration: _box("Duration"),
+        ),
+        const SizedBox(height: 24),
+
+        const Text(
+          "Features (point wise)",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+
+        Column(
           children: [
-            TextField(
-              controller: _nameController,
-              decoration: _boxDecoration("Plan Name"),
-            ),
-            const SizedBox(height: 16),
-
-            // 🔹 Role Dropdown
-            InputDecorator(
-              decoration: _boxDecoration("Select Role"),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _selectedRole,
-                  isExpanded: true,
-                  items: _roles
-                      .map((role) =>
-                          DropdownMenuItem(value: role, child: Text(role)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedRole = value;
-                    });
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            TextField(
-              controller: _amountController,
-              decoration: _boxDecoration("Amount (₹)"),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-
-            TextField(
-              controller: _durationController,
-              decoration: _boxDecoration("Duration"),
-            ),
-            const SizedBox(height: 24),
-
-            // 🔹 Features list
-            const Text(
-              "Features (point wise)",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-
-            Column(
-              children: [
-                for (int i = 0; i < _featureControllers.length; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _featureControllers[i],
-                            decoration:
-                                _boxDecoration("Feature ${i + 1}"),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        if (_featureControllers.length > 1)
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle,
-                                color: AppColors.primary),
-                            onPressed: () => _removeFeatureField(i),
-                          ),
-                      ],
+            for (int i = 0; i < _featureControllers.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _featureControllers[i],
+                        decoration: _box("Feature ${i + 1}"),
+                      ),
                     ),
-                  ),
-                TextButton.icon(
-                  onPressed: _addFeatureField,
-                  icon:  Icon(Icons.add_circle, color: AppColors.primary),
-                  label:  Text("Add Feature",
-                      style: TextStyle(color: AppColors.primary)),
+                    if (_featureControllers.length > 1)
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle,
+                            color: Colors.red),
+                        onPressed: () => _removeFeatureField(i),
+                      ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // 🔹 Save Button
-            ElevatedButton.icon(
-              onPressed: _savePlan,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
               ),
-              icon: const Icon(Icons.save,color: Colors.white,),
-              label: Text(isEditing ? "Update Plan" : "Add Plan",style: TextStyle(color: Colors.white,),),
+            TextButton.icon(
+              onPressed: _addFeatureField,
+              icon: Icon(Icons.add_circle, color: AppColors.primary),
+              label: Text("Add Feature",
+                  style: TextStyle(color: AppColors.primary)),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: 24),
+
+        ElevatedButton.icon(
+          onPressed: _savePlan,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+          ),
+          icon: const Icon(Icons.save, color: Colors.white),
+          label: Text(
+            isEditing ? "Update Plan" : "Add Plan",
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 }

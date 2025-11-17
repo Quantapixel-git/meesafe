@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mee_safe/feathers/constants/app_colors.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -10,7 +11,7 @@ class FooterSection extends StatelessWidget {
         // -------- Top Footer Section --------
         Container(
           width: double.infinity,
-          color: const Color(0xFFF8F8F8),
+          color: Colors.grey,
           padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 40),
           child: LayoutBuilder(
             builder: (context, constraints) {

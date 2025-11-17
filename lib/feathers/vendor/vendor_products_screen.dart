@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mee_safe/feathers/constants/app_colors.dart';
+import 'package:mee_safe/feathers/vendor/vendor_drawer.dart';
 
 class VendorProductsScreen extends StatefulWidget {
   const VendorProductsScreen({super.key});
@@ -96,81 +97,199 @@ class _VendorProductsScreenState extends State<VendorProductsScreen> {
     final models = selectedBrand != null ? brandModels[selectedBrand]! : [];
     final variants = selectedModel != null ? modelVariants[selectedModel]! : [];
 
+  return LayoutBuilder(
+  builder: (context, constraints) {
+    final bool isDesktop = constraints.maxWidth > 900;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Vendor Products"),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildDropdown("Device", selectedDevice, deviceBrands.keys.toList(),
-                  (val) {
-                setState(() {
-                  selectedDevice = val;
-                  selectedBrand = null;
-                  selectedModel = null;
-                  selectedVariant = null;
-                });
-              }),
-              _buildDropdown("Brand", selectedBrand, brands, (val) {
-                setState(() {
-                  selectedBrand = val;
-                  selectedModel = null;
-                  selectedVariant = null;
-                });
-              }),
-              _buildDropdown("Model", selectedModel, models, (val) {
-                setState(() {
-                  selectedModel = val;
-                  selectedVariant = null;
-                });
-              }),
-              _buildDropdown("Variant", selectedVariant, variants, (val) {
-                setState(() {
-                  selectedVariant = val;
-                });
-              }),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: _addProduct,
-                icon: const Icon(Icons.add),
-                label: const Text("Add Product"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Divider(),
-              const Text("Existing Products",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              ListView.builder(
-                itemCount: existingProducts.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final product = existingProducts[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: ListTile(
-                      title: Text("${product['brand']} - ${product['model']}"),
-                      subtitle: Text(
-                          "${product['device']} • ${product['variant']}"),
-                      trailing: const Icon(Icons.inventory_2_outlined),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+
+      // ------------------ MOBILE DRAWER ONLY ------------------
+        drawer: isDesktop ? null : VendorDrawer(),
+
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+           if (isDesktop) 
+        SizedBox(
+          width: 250,
+          child: VendorDrawer(), 
         ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: isDesktop
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: _buildDesktopForm()),
+                          const SizedBox(width: 40),
+                          Expanded(child: _buildDesktopList()),
+                        ],
+                      )
+                    : _buildMobileUI(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  },
+);
+
+
   }
+  Widget _buildDesktopForm() {
+  final brands = selectedDevice != null ? deviceBrands[selectedDevice]! : [];
+  final models = selectedBrand != null ? brandModels[selectedBrand]! : [];
+  final variants = selectedModel != null ? modelVariants[selectedModel]! : [];
+
+  return Column(
+    children: [
+      _buildDropdown("Device", selectedDevice,
+          deviceBrands.keys.toList(), (val) {
+        setState(() {
+          selectedDevice = val;
+          selectedBrand = null;
+          selectedModel = null;
+          selectedVariant = null;
+        });
+      }),
+      _buildDropdown("Brand", selectedBrand, brands, (val) {
+        setState(() {
+          selectedBrand = val;
+          selectedModel = null;
+          selectedVariant = null;
+        });
+      }),
+      _buildDropdown("Model", selectedModel, models, (val) {
+        setState(() {
+          selectedModel = val;
+          selectedVariant = null;
+        });
+      }),
+      _buildDropdown("Variant", selectedVariant, variants, (val) {
+        setState(() {
+          selectedVariant = val;
+        });
+      }),
+      const SizedBox(height: 20),
+      ElevatedButton.icon(
+        onPressed: _addProduct,
+        icon: const Icon(Icons.add),
+        label: const Text("Add Product"),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildDesktopList() {
+  return Column(
+    children: [
+      const Text(
+        "Existing Products",
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 12),
+      ListView.builder(
+        itemCount: existingProducts.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final product = existingProducts[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              title: Text("${product['brand']} - ${product['model']}"),
+              subtitle:
+                  Text("${product['device']} • ${product['variant']}"),
+              trailing: const Icon(Icons.inventory_2_outlined),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
+Widget _buildMobileUI() {
+  final brands = selectedDevice != null ? deviceBrands[selectedDevice]! : [];
+  final models = selectedBrand != null ? brandModels[selectedBrand]! : [];
+  final variants = selectedModel != null ? modelVariants[selectedModel]! : [];
+
+  return Column(
+    children: [
+      _buildDropdown("Device", selectedDevice,
+          deviceBrands.keys.toList(), (val) {
+        setState(() {
+          selectedDevice = val;
+          selectedBrand = null;
+          selectedModel = null;
+          selectedVariant = null;
+        });
+      }),
+      _buildDropdown("Brand", selectedBrand, brands, (val) {
+        setState(() {
+          selectedBrand = val;
+          selectedModel = null;
+          selectedVariant = null;
+        });
+      }),
+      _buildDropdown("Model", selectedModel, models, (val) {
+        setState(() {
+          selectedModel = val;
+          selectedVariant = null;
+        });
+      }),
+      _buildDropdown("Variant", selectedVariant, variants, (val) {
+        setState(() {
+          selectedVariant = val;
+        });
+      }),
+      const SizedBox(height: 16),
+      ElevatedButton.icon(
+        onPressed: _addProduct,
+        icon: const Icon(Icons.add),
+        label: const Text("Add Product"),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          padding:
+              const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+        ),
+      ),
+      const SizedBox(height: 24),
+      const Divider(),
+      const Text("Existing Products",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      ListView.builder(
+        itemCount: existingProducts.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final product = existingProducts[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            child: ListTile(
+              title: Text("${product['brand']} - ${product['model']}"),
+              subtitle:
+                  Text("${product['device']} • ${product['variant']}"),
+              trailing: const Icon(Icons.inventory_2_outlined),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
 }

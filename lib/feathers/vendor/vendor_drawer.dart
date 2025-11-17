@@ -6,7 +6,7 @@ import 'package:mee_safe/feathers/vendor/vendor_claim_screen.dart';
 import 'package:mee_safe/feathers/vendor/vendor_company_screen.dart';
 import 'package:mee_safe/feathers/vendor/vendor_plan_screen.dart';
 import 'package:mee_safe/feathers/vendor/vendor_products_screen.dart';
-import 'package:mee_safe/feathers/vendor/warranty_registration_page.dart';
+import 'package:mee_safe/feathers/vendor/vendor_warranty_registration_page.dart';
 
 class VendorDrawer extends StatelessWidget {
   const VendorDrawer({super.key});
@@ -38,7 +38,7 @@ class VendorDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VendorCompanyDetailsScreen()),
+                MaterialPageRoute(builder: (context) => VendorCompanyScreen()),
               );
             },
           ),
@@ -74,7 +74,7 @@ class VendorDrawer extends StatelessWidget {
           ),
           _buildDrawerItem(
             icon: Icons.bar_chart,
-            title: "Manage Expirations and claims",
+            title: "Manage Claims",
             onTap: () {
                Navigator.push(
                 context,

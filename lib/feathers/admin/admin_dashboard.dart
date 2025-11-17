@@ -15,6 +15,23 @@ class AdminDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Desktop View
+        if (constraints.maxWidth >= 800) {
+          return _buildDesktopView(context);
+        }
+
+        // Mobile View (YOUR ORIGINAL CODE)
+        return _buildMobileView(context);
+      },
+    );
+  }
+
+  // --------------------------------------------------------------------------
+  // ✅ MOBILE VIEW (YOUR EXISTING CODE – NOT TOUCHED)
+  // --------------------------------------------------------------------------
+  Widget _buildMobileView(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Admin Dashboard"),
@@ -27,7 +44,6 @@ class AdminDashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row 1: Users & Companies
             Row(
               children: [
                 _buildStatCard("Total Users", totalUsers, Colors.blue),
@@ -37,7 +53,6 @@ class AdminDashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Row 2: Approved / Pending Companies
             Row(
               children: [
                 _buildStatCard("Approved Companies", approvedCompanies, Colors.teal),
@@ -47,7 +62,6 @@ class AdminDashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Row 3: Warranty & Claims
             Row(
               children: [
                 _buildStatCard("Total Warranty", totalWarranty, Colors.purple),
@@ -55,14 +69,81 @@ class AdminDashboardScreen extends StatelessWidget {
                 _buildStatCard("Total Claims", totalClaims, Colors.red),
               ],
             ),
-
-                    ],
+          ],
         ),
       ),
     );
   }
 
-  // Widget to build statistic cards
+  // --------------------------------------------------------------------------
+  // ✅ DESKTOP VIEW (NEW UI)
+  // --------------------------------------------------------------------------
+  Widget _buildDesktopView(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xffF5F5F7),
+      body: Row(
+        children: [
+          // Drawer sidebar fixed on the left
+          SizedBox(
+            width: 250,
+            child: AdminDrawer(),
+          ),
+
+          // Main content area
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Admin Dashboard",
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Responsive Grid (3 Columns)
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      int columnCount = 3;
+
+                      if (constraints.maxWidth < 1100) {
+                        columnCount = 2;
+                      }
+                      if (constraints.maxWidth < 800) {
+                        columnCount = 1;
+                      }
+
+                      return GridView.count(
+                        shrinkWrap: true,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: columnCount,
+                        childAspectRatio: 2,
+                        children: [
+                          _desktopStatCard("Total Users", totalUsers, Colors.blue),
+                          _desktopStatCard("Total Companies", totalCompanies, Colors.green),
+                          _desktopStatCard("Approved Companies", approvedCompanies, Colors.teal),
+                          _desktopStatCard("Pending Companies", pendingCompanies, Colors.orange),
+                          _desktopStatCard("Total Warranty", totalWarranty, Colors.purple),
+                          _desktopStatCard("Total Claims", totalClaims, Colors.red),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --------------------------------------------------------------------------
+  // MOBILE CARD (NO CHANGE)
+  // --------------------------------------------------------------------------
   Widget _buildStatCard(String title, int value, Color color) {
     return Expanded(
       child: Container(
@@ -92,6 +173,45 @@ class AdminDashboardScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // --------------------------------------------------------------------------
+  // DESKTOP CARD (Wide Layout)
+  // --------------------------------------------------------------------------
+  Widget _desktopStatCard(String title, int value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(color: Colors.black12.withOpacity(0.05), blurRadius: 8),
+        ],
+        border: Border.all(color: Colors.grey.withOpacity(0.15)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value.toString(),
+            style: TextStyle(
+              fontSize: 34,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ],
       ),
     );
   }
